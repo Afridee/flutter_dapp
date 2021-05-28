@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
@@ -10,7 +12,7 @@ class TodoListModel extends ChangeNotifier {
   List<Task> todos = [];
   final String _rpcUrl = "https://eth-rinkeby.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
   final String _wsUrl = "wss://eth-rinkeby.ws.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
-  final String _privateKey = "**********************************************************";
+  final String _privateKey = "d797c0ae942831f02f5d910b278428a5579721a98e199878a4e339d323578100";
 
   Web3Client _client;
   int taskCount = 0;
@@ -24,6 +26,7 @@ class TodoListModel extends ChangeNotifier {
   ContractFunction _todos;
   ContractFunction _createTask;
   ContractEvent _taskCreatedEvent;
+  StreamSubscription EventStream;
 
   TodoListModel() {
     initiateSetup();
@@ -36,6 +39,13 @@ class TodoListModel extends ChangeNotifier {
     await getAbi();
     await getCredentials();
     await getDeployedContract();
+    startStream();
+  }
+
+  Future<void> startStream() {
+      EventStream = _client.events(FilterOptions.events(contract: _contract, event: _taskCreatedEvent)).listen((event) {
+         getTodos();
+      });
   }
 
   Future<void> getAbi() async {
@@ -65,16 +75,17 @@ class TodoListModel extends ChangeNotifier {
   }
 
   getTodos() async {
+    isLoading = true;
+    notifyListeners();
     List totalTasksList = await _client.call(contract: _contract, function: _taskCount, params: []);
     BigInt totalTasks = totalTasksList[0];
-    taskCount = totalTasks.toInt();
     todos.clear();
     for (var i = 0; i < totalTasks.toInt(); i++) {
       var temp = await _client.call(
           contract: _contract, function: _todos, params: [BigInt.from(i)]);
       todos.add(Task(taskName: temp[0], isCompleted: temp[1]));
     }
-
+    taskCount = totalTasks.toInt();
     isLoading = false;
     notifyListeners();
   }

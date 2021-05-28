@@ -46,9 +46,9 @@ class _TodoAppState extends State<TodoApp> {
           Expanded(
             flex: 4,
             child: ListView.builder(
-              itemCount: listModel.taskCount,
+              itemCount: listModel.todos.length,
               itemBuilder: (context, index) => ListTile(
-                title: Text(listModel.todos[index].taskName),
+                title: Text(listModel.todos[index].taskName) ?? '...',
               ),
             ),
           ),
