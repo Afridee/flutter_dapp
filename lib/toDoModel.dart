@@ -9,7 +9,6 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 
 class TodoListModel extends ChangeNotifier {
-
   List<Task> todos = [];
   final String _rpcUrl = "https://eth-rinkeby.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
   final String _wsUrl = "wss://eth-rinkeby.ws.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
