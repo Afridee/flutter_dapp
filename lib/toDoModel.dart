@@ -13,7 +13,7 @@ class TodoListModel extends ChangeNotifier {
   List<Task> todos = [];
   final String _rpcUrl = "https://eth-rinkeby.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
   final String _wsUrl = "wss://eth-rinkeby.ws.alchemyapi.io/v2/7GlQ2WphTEelJnbxHC3s0stsjNWqeBZh";
-  final String _privateKey = "*********************";
+  final String _privateKey = "d797c0ae942831f02f5d910b278428a5579721a98e199878a4e339d323578100";
 
   Web3Client _client;
   int taskCount = 0;
